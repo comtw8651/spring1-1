@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>會員登入</title>
+</head>
+<body>
+    <h2>會員登入</h2>
+    <form method="POST" action="/login">
+        帳號：<input type="text" name="account" required /><br /><br />
+        密碼：<input type="password" name="passwd" required /><br /><br />
+        <button type="submit">登入</button>
+    </form>
+
+    <hr />
+
+    <h3>使用 Google 登入</h3>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <div id="g_id_onload"
+         data-client_id="66087248968-3kjfaqub7t6irtu7nuuvojd7oqmu69c8.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin" data-type="standard"></div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            const id_token = response.credential;
+            fetch("/google-login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idToken: id_token })
+            }).then(res => {
+                if (res.redirected) {
+                    window.location.href = res.url;
+                } else {
+                    alert("Google 登入失敗！");
+                }
+            }).catch(err => {
+                console.error("Fetch 錯誤:", err);
+                alert("登入請求發生錯誤！");
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<meta charset="utf-8" />
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+<script>
+let apiUrl = "/brad08/member";
+function register(){
+	const postData = {
+			account: $("#account").val(),
+			passwd: $("#passwd").val(),
+			cname: $("#cname").val()
+	};
+	
+	console.log(postData);
+	
+	fetch(apiUrl,{
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(postData)
+	})
+	.then(response => {
+		if (!response.ok){
+			throw new Error(`ERROR: status: ${response.status}`);
+		}
+		return response.json();
+	})
+	.then(data => {
+		console.log('Success:', data);
+	})
+	.catch(error => {
+		console.log('ERROR')
+	});
+}
+</script>
+
+<h1>Brad Big Company</h1>
+<hr />
+Account: <input type="text" id="account" /><br />
+Password: <input type="password" id="passwd" /><br />
+Realname: <input type="text" id="cname" /><br />
+<button onclick="register()">Register</button>
+<hr />
