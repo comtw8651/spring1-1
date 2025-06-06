@@ -1,42 +1,59 @@
 <meta charset="utf-8" />
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script>
-let apiUrl = "/brad08/member";
-function register(){
-	const postData = {
-			account: $("#account").val(),
-			passwd: $("#passwd").val(),
-			cname: $("#cname").val()
-	};
-	
-	console.log(postData);
-	
-	fetch(apiUrl,{
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(postData)
-	})
-	.then(response => {
-		if (!response.ok){
-			throw new Error(`ERROR: status: ${response.status}`);
-		}
-		return response.json();
-	})
-	.then(data => {
-		console.log('Success:', data);
-	})
-	.catch(error => {
-		console.log('ERROR')
-	});
+let apiUrl = "/membercontroller/register";
+
+function register() {
+    const postData = {
+        account: $("#account").val(),
+        passwd: $("#password").val(),
+        cname: $("#cname").val()
+    };
+
+    // Email 格式驗證
+    if (!postData.account.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        alert("請輸入有效的 Email");
+        return;
+    }
+
+    // 基本欄位檢查
+    if (!postData.passwd || !postData.cname) {
+        alert("請完整填寫密碼與姓名");
+        return;
+    }
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData)
+    })
+    .then(response => response.text().then(text => {
+        if (!response.ok) {
+            throw new Error(text);
+        }
+        return text;
+    }))
+    .then(message => {
+        console.log('Success:', message);
+        alert(message); // 顯示伺服器回傳的訊息
+    })
+    .catch(error => {
+        console.error('ERROR:', error);
+        alert("發生錯誤：" + error.message);
+    });
 }
 </script>
 
 <h1>Brad Big Company</h1>
 <hr />
-Account: <input type="text" id="account" /><br />
-Password: <input type="password" id="passwd" /><br />
-Realname: <input type="text" id="cname" /><br />
+<label for="account">Account (Email):</label>
+<input type="text" id="account" /><br />
+
+<label for="passwd">Password:</label>
+<input type="password" id="password" /><br />
+
+<label for="cname">Real Name:</label>
+<input type="text" id="cname" /><br />
+
 <button onclick="register()">Register</button>
 <hr />
