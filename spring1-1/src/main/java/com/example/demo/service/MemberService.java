@@ -6,7 +6,6 @@ import com.example.demo.entity.VerificationToken;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.VerificationTokenRepository;
 import com.example.demo.utils.BCrypt;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

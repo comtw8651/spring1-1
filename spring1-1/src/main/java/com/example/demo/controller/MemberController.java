@@ -1,16 +1,13 @@
 package com.example.demo.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,18 +24,12 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/membercontroller")
 public class MemberController {
-
-	@Autowired
-	private NamedParameterJdbcTemplate template;
 	
 	@Autowired
 	private Response response;
 		
 	@PostMapping("/members")
 	public Response test2(@RequestBody List<Member> members) {
-		String sql = "INSERT INTO member " + 
-				"(account,password,cname) " + 
-				"VALUES (:account, :password, :cname)";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		MapSqlParameterSource[] params = 
 			new MapSqlParameterSource[members.size()];
@@ -51,7 +42,6 @@ public class MemberController {
 			params[i].addValue("cname", member.getCname());				
 		}
 		
-		int[] ns = template.batchUpdate(sql, params, keyHolder);
 		List<Map<String,Object>> ids = keyHolder.getKeyList();
 		
 		for (Map<String,Object> id : ids) {
